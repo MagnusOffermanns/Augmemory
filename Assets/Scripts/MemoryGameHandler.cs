@@ -15,6 +15,20 @@ public class MemoryGameHandler : MonoBehaviour
     public TextMeshProUGUI matchesUI;
     public TextMeshProUGUI turnsUI;
 
+    private static MemoryGameHandler _instance;
+
+
+    public static MemoryGameHandler Instance
+    {
+        get { return _instance; }
+    }
+
+    void Awake()
+    {
+        _instance = this;
+    }
+
+
     // Update is called once per frame
     void Update()
     {
@@ -61,22 +75,22 @@ public class MemoryGameHandler : MonoBehaviour
         }
     }
 
-    public void setNextBlock(GameObject clickedObj)
+    public void setNextBlock(MemoryBlock clickedObj)
     {
        
-                if (clickedObj.tag == "Block" && clickedObj.GetComponent<MemoryBlock>().active)
+                if (clickedObj.active)
                 {
 
                     if (selected1 == null)
                     {
-                        selected1 = clickedObj.GetComponent<MemoryBlock>();
+                        selected1 = clickedObj;
                         selected1.selected();
                     }
                     else if (selected2 == null)
                     {
                         turns++;
                         turnsUI.text = "Turns: " + turns;
-                        selected2 = clickedObj.GetComponent<MemoryBlock>();
+                        selected2 = clickedObj;
                         selected2.selected();
                         if (selected1.matchIndex == selected2.matchIndex)
                         {

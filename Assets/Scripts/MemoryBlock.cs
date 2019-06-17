@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using HoloToolkit.Unity.InputModule;
 
-public class MemoryBlock : MonoBehaviour
+public class MemoryBlock : MonoBehaviour, IInputClickHandler
 {
 
     public int matchIndex;
@@ -100,5 +101,10 @@ public class MemoryBlock : MonoBehaviour
         yield return new WaitForSecondsRealtime(1f);
         Destroy(gameObject);
         yield return null;
+    }
+
+    public void OnInputClicked(InputClickedEventData eventData)
+    {
+        MemoryGameHandler.Instance.setNextBlock(this);
     }
 }

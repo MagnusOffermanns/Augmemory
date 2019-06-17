@@ -566,11 +566,11 @@ PlayerSettings:
   m_MobileRenderingPath: 1
   metroPackageName: Augmemory
   metroPackageVersion: 
-  metroCertificatePath: 
+  metroCertificatePath: Assets\WSATestCertificate.pfx
   metroCertificatePassword: 
-  metroCertificateSubject: 
-  metroCertificateIssuer: 
-  metroCertificateNotAfter: 0000000000000000
+  metroCertificateSubject: DefaultCompany
+  metroCertificateIssuer: DefaultCompany
+  metroCertificateNotAfter: 80388dee3b44d601
   metroApplicationDescription: Augmemory
   wsaImages: {}
   metroTileShortName: 
