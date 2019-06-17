@@ -8,8 +8,10 @@ public class MemoryGameSetup : MonoBehaviour
     public int cardRows;
     public int cardColumns;
     public GameObject card;
+    public GameObject resetButton;
     public float offset = 100f;
     public Transform parent;
+    
 
     public List<MemoryBlock> blocksWithOutNumbers;
     
@@ -17,6 +19,9 @@ public class MemoryGameSetup : MonoBehaviour
     void Start()
     {
         Vector3 currPos = startingPos.position;
+
+        GameObject resetButtonObj = Instantiate(resetButton, currPos - new Vector3(offset,0,0), Quaternion.identity);
+
         for(int i = 0; i < cardColumns; i++)
         {
             for(int j = 0; j < cardRows; j++)
