@@ -14,22 +14,48 @@ public class MemoryGameSetup : MonoBehaviour
     
 
     public List<MemoryBlock> blocksWithOutNumbers;
-    
+
+
+    private MemoryBlock[][] _blocks;
+
+    private static MemoryGameSetup _instance;
+
+    public static MemoryGameSetup Instance{
+        get { return _instance; }
+    }
+
+
+    private void Awake()
+    {
+        _instance = this;
+    }
+
+
     // Start is called before the first frame update
     void Start()
+    {
+        StartGame();
+    }
+
+    public void StartGame()
     {
         Vector3 currPos = startingPos.position;
 
         GameObject resetButtonObj = Instantiate(resetButton, currPos - new Vector3(offset,0,0), Quaternion.identity);
 
         for(int i = 0; i < cardColumns; i++)
+        _blocks = new MemoryBlock[cardColumns][];
+        blocksWithOutNumbers = new List<MemoryBlock>();
+        for (int i = 0; i < cardColumns; i++)
         {
-            for(int j = 0; j < cardRows; j++)
+            _blocks[i] = new MemoryBlock[cardRows];
+            for (int j = 0; j < cardRows; j++)
             {
                 GameObject obj = Instantiate(card, currPos, Quaternion.identity);
                 obj.transform.parent = parent;
                 blocksWithOutNumbers.Add(obj.GetComponent<MemoryBlock>());
                 currPos.x += offset;
+                _blocks[i][j] = obj.GetComponent<MemoryBlock>();
             }
             currPos.x = startingPos.position.x;
             currPos.y += offset;
@@ -43,7 +69,7 @@ public class MemoryGameSetup : MonoBehaviour
 
         for (int i = 0; i < blockNum; i++)
         {
-            if(i % matchingBlocks == 0)
+            if (i % matchingBlocks == 0)
             {
                 currentIndex++;
             }
@@ -53,9 +79,19 @@ public class MemoryGameSetup : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    public void RestartGame()
     {
-        
+        foreach (var blockArray in _blocks)
+        {
+            foreach (var block in blockArray)
+            {
+                if(block != null)
+                {
+                    Destroy(block.gameObject);
+                }
+            }
+        }
+        _blocks = null;
+        StartGame();
     }
 }
