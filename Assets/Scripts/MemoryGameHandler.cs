@@ -30,7 +30,7 @@ public class MemoryGameHandler : MonoBehaviour
 
 
     // Update is called once per frame
-    void Update()
+   /* void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
@@ -74,7 +74,7 @@ public class MemoryGameHandler : MonoBehaviour
             }
         }
     }
-
+    */
     public void setNextBlock(MemoryBlock clickedObj)
     {
        
