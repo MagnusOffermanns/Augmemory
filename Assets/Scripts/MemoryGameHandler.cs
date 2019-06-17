@@ -30,7 +30,7 @@ public class MemoryGameHandler : MonoBehaviour
 
 
     // Update is called once per frame
-    void Update()
+    /*void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
@@ -73,7 +73,7 @@ public class MemoryGameHandler : MonoBehaviour
                 Debug.Log("No hit");
             }
         }
-    }
+    }*/
 
     public void setNextBlock(MemoryBlock clickedObj)
     {
@@ -108,6 +108,12 @@ public class MemoryGameHandler : MonoBehaviour
     }
 
 
+    private void UpdateUi()
+    {
+
+    }
+
+
     IEnumerator deleteBlocks()
     {
         selected1.destroy();
@@ -128,6 +134,10 @@ public class MemoryGameHandler : MonoBehaviour
 
     public void restart()
     {
-        SceneManager.LoadScene("SampleScene");
+        turns = 0;
+        matchedPairs = 0;
+        selected1 = null;
+        selected2 = null;
+        MemoryGameSetup.Instance.RestartGame();
     }
 }
