@@ -15,10 +15,14 @@ public class MemoryGameSetup : MonoBehaviour
 
     public List<MemoryBlock> blocksWithOutNumbers;
 
-
-    private MemoryBlock[][] _blocks;
+    private List<MemoryBlock> _blocks;
 
     private static MemoryGameSetup _instance;
+
+    public List<MemoryBlock> Blocks
+    {
+        get { return _blocks; }
+    }
 
     public static MemoryGameSetup Instance{
         get { return _instance; }
@@ -41,21 +45,18 @@ public class MemoryGameSetup : MonoBehaviour
     {
         Vector3 currPos = startingPos.position;
 
-        GameObject resetButtonObj = Instantiate(resetButton, currPos - new Vector3(offset,0,0), Quaternion.identity);
-
-        for(int i = 0; i < cardColumns; i++)
-        _blocks = new MemoryBlock[cardColumns][];
+        //GameObject resetButtonObj = Instantiate(resetButton, currPos - new Vector3(offset,0,0), Quaternion.identity);
+        _blocks = new List<MemoryBlock>();
         blocksWithOutNumbers = new List<MemoryBlock>();
         for (int i = 0; i < cardColumns; i++)
         {
-            _blocks[i] = new MemoryBlock[cardRows];
             for (int j = 0; j < cardRows; j++)
             {
                 GameObject obj = Instantiate(card, currPos, Quaternion.identity);
                 obj.transform.parent = parent;
                 blocksWithOutNumbers.Add(obj.GetComponent<MemoryBlock>());
                 currPos.x += offset;
-                _blocks[i][j] = obj.GetComponent<MemoryBlock>();
+                _blocks.Add(obj.GetComponent<MemoryBlock>());
             }
             currPos.x = startingPos.position.x;
             currPos.y += offset;
@@ -81,15 +82,14 @@ public class MemoryGameSetup : MonoBehaviour
 
     public void RestartGame()
     {
-        foreach (var blockArray in _blocks)
+        foreach (var block in _blocks)
         {
-            foreach (var block in blockArray)
+            
+            if(block != null)
             {
-                if(block != null)
-                {
-                    Destroy(block.gameObject);
-                }
+                Destroy(block.gameObject);
             }
+            
         }
         _blocks = null;
         StartGame();
