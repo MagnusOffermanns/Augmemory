@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Events;
 using TMPro;
 
 public class MemoryGameHandler : MonoBehaviour
@@ -12,8 +13,8 @@ public class MemoryGameHandler : MonoBehaviour
     public int turns;
     public int matchedPairs;
 
-    public TextMeshProUGUI matchesUI;
-    public TextMeshProUGUI turnsUI;
+    public TextMeshProUGUI statText;
+    public UnityEvent onGameOver;
 
     private static MemoryGameHandler _instance;
 
@@ -27,54 +28,6 @@ public class MemoryGameHandler : MonoBehaviour
     {
         _instance = this;
     }
-
-
-    // Update is called once per frame
-   /* void Update()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-            if (Physics.Raycast(ray, out hit))
-            {
-                GameObject clickedObj = hit.transform.gameObject;
-                if (clickedObj.tag == "Block" && clickedObj.GetComponent<MemoryBlock>().active)
-                {
-
-                    if (selected1 == null)
-                    {
-                        selected1 = clickedObj.GetComponent<MemoryBlock>();
-                        selected1.selected();
-                    }
-                    else if(selected2 == null)
-                    {
-                        turns++;
-                        turnsUI.text = "Turns: " + turns;
-                        selected2 = clickedObj.GetComponent<MemoryBlock>();
-                        selected2.selected();
-                        if (selected1.matchIndex == selected2.matchIndex)
-                        {
-                            //print("Match pair: " + selected1.matchIndex);
-                            StartCoroutine(deleteBlocks());
-                            matchedPairs++;
-                            matchesUI.text = "Matches: " + matchedPairs;
-                        }
-                        else
-                        {
-                            StartCoroutine(resetBlocks());
-                        }
-                    }
-                }
-            }
-            else
-            {
-                Debug.Log("No hit");
-            }
-        }
-    }
-    */
     public void setNextBlock(MemoryBlock clickedObj)
     {
        
@@ -89,7 +42,7 @@ public class MemoryGameHandler : MonoBehaviour
                     else if (selected2 == null)
                     {
                         turns++;
-                        turnsUI.text = "Turns: " + turns;
+                        
                         selected2 = clickedObj;
                         selected2.selected();
                         if (selected1.matchIndex == selected2.matchIndex)
@@ -97,12 +50,13 @@ public class MemoryGameHandler : MonoBehaviour
                             //print("Match pair: " + selected1.matchIndex);
                             StartCoroutine(deleteBlocks());
                             matchedPairs++;
-                            matchesUI.text = "Matches: " + matchedPairs;
+                            
                         }
                         else
                         {
                             StartCoroutine(resetBlocks());
                         }
+                        UpdateUi();
                     }
                 }
     }
@@ -110,17 +64,24 @@ public class MemoryGameHandler : MonoBehaviour
 
     private void UpdateUi()
     {
-
+        statText.text = "Turns: " + turns + "\nMatches: " + matchedPairs;
     }
 
 
     IEnumerator deleteBlocks()
     {
+        MemoryGameSetup.Instance.Blocks.Remove(selected1);
+        MemoryGameSetup.Instance.Blocks.Remove(selected2);
         selected1.destroy();
         selected2.destroy();
         yield return new WaitForSecondsRealtime(1f);
         selected1 = null;
         selected2 = null;
+        if(MemoryGameSetup.Instance.Blocks.Count == 0)
+        {
+            onGameOver.Invoke();
+        }
+
     }
 
     IEnumerator resetBlocks()
@@ -138,6 +99,7 @@ public class MemoryGameHandler : MonoBehaviour
         matchedPairs = 0;
         selected1 = null;
         selected2 = null;
+        UpdateUi();
         MemoryGameSetup.Instance.RestartGame();
     }
 }
