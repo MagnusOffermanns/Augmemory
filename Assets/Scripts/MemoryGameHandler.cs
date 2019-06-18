@@ -210,6 +210,7 @@ public class MemoryGameHandler : MonoBehaviour
     /// </summary>
     public void Restart()
     {
+        _isRunning = false;
         Turns = 0;
         MatchedPairs = 0;
         Selected1 = null;
@@ -270,7 +271,10 @@ public class MemoryGameHandler : MonoBehaviour
         _cdTimeLeft = Countdown;
         _lastIntegerTimeValue = (int)_cdTimeLeft + 1;
         _countDownTimerIsRunning = true;
-        CountdownHandler.OpenPreview(_lastIntegerTimeValue);
+        if (CountdownHandler)
+        {
+            CountdownHandler.OpenPreview(_lastIntegerTimeValue);
+        }
         
     }
 }

@@ -1881,6 +1881,11 @@ RectTransform:
   m_PrefabParentObject: {fileID: 224448777941826576, guid: bc5759910c321de48bc873f8c50837e6,
     type: 2}
   m_PrefabInternal: {fileID: 369011111}
+--- !u!1 &369011113 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1182705400458442, guid: bc5759910c321de48bc873f8c50837e6,
+    type: 2}
+  m_PrefabInternal: {fileID: 369011111}
 --- !u!20 &411947697 stripped
 Camera:
   m_PrefabParentObject: {fileID: 20049547090947856, guid: 3eddd1c29199313478dd3f912bfab2ab,
@@ -2113,6 +2118,7 @@ MonoBehaviour:
   _objects:
   - {fileID: 224290127}
   - {fileID: 1779874236}
+  - {fileID: 369011113}
 --- !u!4 &612798824
 Transform:
   m_ObjectHideFlags: 0

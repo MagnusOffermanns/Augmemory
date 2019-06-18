@@ -103,6 +103,17 @@ public class GameHandlerTest {
     }
 
     [Test]
+    public void GameHandlerTestDoubleStartBehaviour()
+    {
+        _gameHandler.Restart();
+        _gameHandler.Countdown = 1f;
+        Assert.IsTrue(_gameHandler.IsRunning);
+        _gameHandler.Restart();
+
+        Assert.IsFalse(_gameHandler.IsRunning);
+    }
+
+    [Test]
     public void GameHandlerFinishGame()
     {
         _gameHandler.Restart();

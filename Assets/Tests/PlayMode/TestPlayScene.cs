@@ -98,4 +98,21 @@ public class TestPlayScene {
         Assert.AreEqual(0, _gameSetup.Blocks.Count);
         Assert.IsTrue(mainMenuButton.gameObject.activeInHierarchy);
     }
+
+
+    [UnityTest]
+    public IEnumerator TestRestartGame()
+    {
+        yield return new WaitForSeconds(1f);
+        SetFields();
+        _gameHandler.Restart();
+        _gameHandler.PostGameStart();
+        yield return new WaitForSeconds(1f);
+        Assert.IsTrue(_gameHandler.IsRunning);
+        var resetButton = _testHelper.Objects[2].GetComponent<HandleClickEvent>();
+        resetButton.OnInputClicked(null);
+        yield return new WaitForSeconds(1f);
+        Assert.IsFalse(_gameHandler.IsRunning);
+
+    }
 }
