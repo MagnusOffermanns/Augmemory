@@ -25,6 +25,7 @@ public class ARGameTimer : MonoBehaviour
     {
         Timer = 0.0f;
         Minutes = 0;
+        TimerText.text = Minutes + ":0" + (int)Timer;
     }
 
     // Update is called once per frame

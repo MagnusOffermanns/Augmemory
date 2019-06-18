@@ -26,6 +26,7 @@ public class MemoryGameHandler : MonoBehaviour
 
     public float Countdown = 0f;
     public CountdownHandler CountdownHandler;
+    public GameEndStatHandler GameEndHandler;
 
     private bool _isRunning; /// Status variable that hold the status if the game is running or not
     private bool _countDownTimerIsRunning;
@@ -146,6 +147,7 @@ public class MemoryGameHandler : MonoBehaviour
     }
 
     /// <summary>
+    /// Called when the game is over.
     /// Invokes the onGameOver event
     /// </summary>
     private void GameOver()
@@ -159,6 +161,10 @@ public class MemoryGameHandler : MonoBehaviour
         if(ArgTimer)
         {
             ArgTimer.StopTimer();
+        }
+        if(GameEndHandler)
+        {
+            GameEndHandler.SetPostGameStat(ArgTimer, Turns);
         }
         
         if (OnGameOver != null)
