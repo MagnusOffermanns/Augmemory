@@ -4,20 +4,57 @@ using UnityEngine;
 
 public class MemoryGameSetup : MonoBehaviour
 {
-    public Transform startingPos;
-    public int cardRows;
-    public int cardColumns;
-    public GameObject card;
-    public float offset = 100f;
-    public Transform parent;
+    [SerializeField]
+    private Transform _startingPos; // lower Left Corner position of the playfield
+    [SerializeField]
+    private int _cardRows; // How much rows of cards are there
+    [SerializeField]
+    private int _cardColumns; // How much columns are there
+    [SerializeField]
+    private GameObject _card; // Prefab of the MemoryBlock GameObject
+    [SerializeField]
+    private float _offset = 100f; // Distance between blocks transform positions
+    [SerializeField]
+    private Transform _parent; // Parenttransform for the blocks
 
     private List<MemoryBlock> _blocks;
 
     private static MemoryGameSetup _instance;
 
-    public List<MemoryBlock> Blocks
+    public Transform StartingPos
     {
-        get { return _blocks; }
+        get { return _startingPos; }
+        set { _startingPos = value; }
+    }
+
+    public int CardRows
+    {
+        get { return _cardRows; }
+        set { _cardRows = value; }
+    }
+
+    public int CardColumns
+    {
+        get { return _cardColumns; }
+        set { _cardColumns = value; }
+    }
+
+    public GameObject Card
+    {
+        get { return _card; }
+        set { _card = value; }
+    }
+
+    public float Offset
+    {
+        get { return _offset; }
+        set { _offset = value; }
+    }
+
+    public Transform Parent
+    {
+        get { return _parent; }
+        set { _parent = value; }
     }
 
     public static MemoryGameSetup Instance
@@ -25,37 +62,41 @@ public class MemoryGameSetup : MonoBehaviour
         get { return _instance; }
     }
 
+    public List<MemoryBlock> Blocks
+    {
+        get { return _blocks; }
+    }
+
+   
+
 
     public void Awake()
     {
         _instance = this;
     }
 
+    /// <summary>
+    /// Creates the memory blocks and assigned random values to them
+    /// </summary>
     public void CreateGameArea()
     {
         ClearPlayField();
         _blocks = new List<MemoryBlock>();
-        Vector3 currPos = startingPos.position;
+        Vector3 currPos = _startingPos.position;
         List<MemoryBlock> blocksWithOutNumbers = new List<MemoryBlock>();
-        for (int i = 0; i < cardColumns; i++)
+        for (int i = 0; i < _cardColumns; i++)
         {
-            for (int j = 0; j < cardRows; j++)
+            for (int j = 0; j < _cardRows; j++)
             {
-                GameObject obj = Instantiate(card, currPos, Quaternion.identity);
-                obj.transform.parent = parent;
+                GameObject obj = Instantiate(_card, currPos, Quaternion.identity);
+                obj.transform.parent = _parent;
                 var memBlock = obj.GetComponent<MemoryBlock>();
                 blocksWithOutNumbers.Add(memBlock);
-                currPos.x += offset;
+                currPos.x += _offset;
                 _blocks.Add(memBlock);
-#if UNITY_EDITOR
-                /*if(!Application.isPlaying)
-                {
-                    memBlock.Start();
-                }*/
-#endif
             }
-            currPos.x = startingPos.position.x;
-            currPos.y += offset;
+            currPos.x = _startingPos.position.x;
+            currPos.y += _offset;
         }
 
         //GIVE RANDOM INDEX TO BLOCK
@@ -75,6 +116,9 @@ public class MemoryGameSetup : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Internal call for clearing the playField
+    /// </summary>
     private void ClearPlayField()
     {
         if (_blocks != null)
@@ -85,6 +129,8 @@ public class MemoryGameSetup : MonoBehaviour
                 if (block != null)
                 {
 #if UNITY_EDITOR
+                    // Special case to remove elements in editmode because of the editmode testscript
+
                     if (Application.isPlaying)
                     {
                         Destroy(block.gameObject);
@@ -101,12 +147,16 @@ public class MemoryGameSetup : MonoBehaviour
             }
         }
     }
-
+    /// <summary>
+    /// Recreates the playfield. Current block are getting removed
+    /// </summary>
     public void ReCreateGameArea()
     {
         CreateGameArea();
     }
-
+    /// <summary>
+    /// Removes all blocks on the playfield
+    /// </summary>
     public void ClearGameArea()
     {
         ClearPlayField();

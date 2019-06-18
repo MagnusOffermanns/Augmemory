@@ -167,6 +167,6 @@ public class MemoryBlock : MonoBehaviour, IInputClickHandler
     /// <param name="eventData"></param>
     public void OnInputClicked(InputClickedEventData eventData)
     {
-        MemoryGameHandler.Instance.setNextBlock(this);
+        MemoryGameHandler.Instance.SetNextBlock(this);
     }
 }

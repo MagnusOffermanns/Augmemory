@@ -403,12 +403,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85a1f59cf9206f34d9afb9b3493a1651, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selected1: {fileID: 0}
-  selected2: {fileID: 0}
-  turns: 0
-  matchedPairs: 0
-  statText: {fileID: 1386335149}
-  onGameStarts:
+  Selected1: {fileID: 0}
+  Selected2: {fileID: 0}
+  Turns: 0
+  MatchedPairs: 0
+  StatText: {fileID: 1386335149}
+  OnGameStarts:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 137347979}
@@ -420,11 +420,11 @@ MonoBehaviour:
           m_IntArgument: 1
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 1
+          m_BoolArgument: 0
         m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
-  onGameOver:
+  OnGameOver:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 137347979}
@@ -436,15 +436,15 @@ MonoBehaviour:
           m_IntArgument: 2
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 1
+          m_BoolArgument: 0
         m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
-  victoryTune: {fileID: 552150609}
-  playTune: {fileID: 127734667}
-  argTimer: {fileID: 1032636294}
-  countdown: 5
-  countdownHandler: {fileID: 32920431}
+  VictoryTune: {fileID: 552150609}
+  PlayTune: {fileID: 127734667}
+  ArgTimer: {fileID: 1032636294}
+  Countdown: 5
+  CountdownHandler: {fileID: 32920431}
 --- !u!1 &134848855
 GameObject:
   m_ObjectHideFlags: 0
@@ -892,6 +892,11 @@ Prefab:
     - target: {fileID: 1391963743398412, guid: bc5759910c321de48bc873f8c50837e6, type: 2}
       propertyPath: m_Name
       value: MenuButton (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 114948488120672922, guid: bc5759910c321de48bc873f8c50837e6,
+        type: 2}
+      propertyPath: onButtonClicked.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Restart
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bc5759910c321de48bc873f8c50837e6, type: 2}
@@ -1443,6 +1448,11 @@ Prefab:
       propertyPath: m_textInfo.wordCount
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 114948488120672922, guid: bc5759910c321de48bc873f8c50837e6,
+        type: 2}
+      propertyPath: onButtonClicked.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Restart
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bc5759910c321de48bc873f8c50837e6, type: 2}
   m_IsPrefabParent: 0
@@ -1615,7 +1625,7 @@ Prefab:
     - target: {fileID: 114948488120672922, guid: bc5759910c321de48bc873f8c50837e6,
         type: 2}
       propertyPath: onButtonClicked.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: restart
+      value: Restart
       objectReference: {fileID: 0}
     - target: {fileID: 4672670911574344, guid: bc5759910c321de48bc873f8c50837e6, type: 2}
       propertyPath: m_LocalScale.x
@@ -2180,9 +2190,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b200d66be3c401a49aec6e7192ba850e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timer: 0
-  minutes: 0
-  timerText: {fileID: 255411620}
+  Timer: 0
+  Minutes: 0
+  TimerText: {fileID: 255411620}
 --- !u!222 &1032636295
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2229,12 +2239,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f058db6ef1f56a4db775c70e24f0966, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingPos: {fileID: 137347978}
-  cardRows: 4
-  cardColumns: 4
-  card: {fileID: 1436171430887606, guid: 58460be32789e2347a7bc3698a1de159, type: 2}
-  offset: 0.5
-  parent: {fileID: 927086615}
+  _startingPos: {fileID: 137347978}
+  _cardRows: 3
+  _cardColumns: 4
+  _card: {fileID: 1436171430887606, guid: 58460be32789e2347a7bc3698a1de159, type: 2}
+  _offset: 0.5
+  _parent: {fileID: 927086615}
 --- !u!1001 &1206000463
 Prefab:
   m_ObjectHideFlags: 0

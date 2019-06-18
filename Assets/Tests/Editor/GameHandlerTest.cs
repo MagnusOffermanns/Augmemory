@@ -29,14 +29,14 @@ public class GameHandlerTest {
     {
         _gameSetup = new GameObject().AddComponent<MemoryGameSetup>();
         _startPos = _gameSetup.transform;
-        _gameSetup.startingPos = _startPos;
+        _gameSetup.StartingPos = _startPos;
         _parent = _gameSetup.transform;
-        _gameSetup.parent = _parent;
-        _gameSetup.cardRows = _rows;
-        _gameSetup.cardColumns = _columns;
-        _gameSetup.offset = _offset;
+        _gameSetup.Parent = _parent;
+        _gameSetup.CardRows = _rows;
+        _gameSetup.CardColumns = _columns;
+        _gameSetup.Offset = _offset;
         GameObject block = TestUtil.GenerateBlockPrefab(_rows, _columns);
-        _gameSetup.card = block;
+        _gameSetup.Card = block;
         _gameSetup.CreateGameArea();
         _gameSetup.Awake();
     }
@@ -45,7 +45,7 @@ public class GameHandlerTest {
     {
         _gameHandler = new GameObject().AddComponent<MemoryGameHandler>();
         _gameHandler.Awake();
-        _gameHandler.statText = new GameObject().AddComponent<TMPro.TextMeshProUGUI>();
+        _gameHandler.StatText = new GameObject().AddComponent<TMPro.TextMeshProUGUI>();
 
     }
 
@@ -58,54 +58,54 @@ public class GameHandlerTest {
     [Test]
     public void GameHandlerTestIsRunning()
     {
-        _gameHandler.restart();
+        _gameHandler.Restart();
         Assert.IsTrue(_gameHandler.IsRunning);
     }
 
     [Test]
     public void GameHandlerTestBlockSelected()
     {
-        _gameHandler.restart();
+        _gameHandler.Restart();
         var block = _gameSetup.Blocks[0];
-        _gameHandler.setNextBlock(block);
-        Assert.AreEqual(block, _gameHandler.selected1);
+        _gameHandler.SetNextBlock(block);
+        Assert.AreEqual(block, _gameHandler.Selected1);
     }
 
     [Test]
     public void GameHandlerTestTwoBlocksSelected()
     {
-        _gameHandler.restart();
+        _gameHandler.Restart();
         var block1 = _gameSetup.Blocks[0];
         var block2 = _gameSetup.Blocks[1];
-        _gameHandler.setNextBlock(block1);
-        _gameHandler.setNextBlock(block2);
-        Assert.AreEqual(block1, _gameHandler.selected1);
-        Assert.AreEqual(block2, _gameHandler.selected2);
+        _gameHandler.SetNextBlock(block1);
+        _gameHandler.SetNextBlock(block2);
+        Assert.AreEqual(block1, _gameHandler.Selected1);
+        Assert.AreEqual(block2, _gameHandler.Selected2);
     }
 
     [Test]
     public void GameHandlerTestSelectTheSameBlockTwice()
     {
-        _gameHandler.restart();
+        _gameHandler.Restart();
         var block1 = _gameSetup.Blocks[0];
-        _gameHandler.setNextBlock(block1);
-        _gameHandler.setNextBlock(block1);
-        Assert.AreEqual(block1, _gameHandler.selected1);
-        Assert.IsNull(_gameHandler.selected2);
+        _gameHandler.SetNextBlock(block1);
+        _gameHandler.SetNextBlock(block1);
+        Assert.AreEqual(block1, _gameHandler.Selected1);
+        Assert.IsNull(_gameHandler.Selected2);
     }
 
     [Test]
     public void GameHandlerTestSelectNotRunning()
     {
         var block1 = _gameSetup.Blocks[0];
-        _gameHandler.setNextBlock(block1);
-        Assert.IsNull(_gameHandler.selected1);
+        _gameHandler.SetNextBlock(block1);
+        Assert.IsNull(_gameHandler.Selected1);
     }
 
     [Test]
     public void GameHandlerFinishGame()
     {
-        _gameHandler.restart();
+        _gameHandler.Restart();
         int pairsCount = (_rows * _columns) / 2;
         List<MemoryBlock>[] pairs = new List<MemoryBlock>[pairsCount];
         var blocks = _gameSetup.Blocks;
@@ -127,10 +127,10 @@ public class GameHandlerTest {
         {
             for (int j = 0; j < 2; j++)
             {
-                _gameHandler.setNextBlock(pairs[i][j]);
+                _gameHandler.SetNextBlock(pairs[i][j]);
             }
         }
-        Assert.AreEqual(pairsCount, _gameHandler.matchedPairs);
+        Assert.AreEqual(pairsCount, _gameHandler.MatchedPairs);
         Assert.AreEqual(0, _gameSetup.Blocks.Count);
     }
 }

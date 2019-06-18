@@ -7,27 +7,27 @@ using TMPro;
 
 public class MemoryGameHandler : MonoBehaviour
 {
-    private static MemoryGameHandler _instance; //Singleton pattern variable for the MemoryGameHandler
+    private static MemoryGameHandler _instance; ///Singleton pattern variable for the MemoryGameHandler
 
 
-    public MemoryBlock selected1; /// First selected MemoryBlock
-    public MemoryBlock selected2; /// Second selected MemoryBlock
+    public MemoryBlock Selected1; /// First selected MemoryBlock
+    public MemoryBlock Selected2; /// Second selected MemoryBlock
 
-    public int turns; /// Amount of turns absolved by the player
-    public int matchedPairs; /// Amount of matched pairs found by the player
+    public int Turns; /// Amount of turns absolved by the player
+    public int MatchedPairs; /// Amount of matched pairs found by the player
 
-    public TextMeshProUGUI statText; /// Reference to the statText UI element used to display statistics
-    public UnityEvent onGameStarts;
-    public UnityEvent onGameOver; /// Reference to the event when a game is over
+    public TextMeshProUGUI StatText; /// Reference to the statText UI element used to display statistics
+    public UnityEvent OnGameStarts;
+    public UnityEvent OnGameOver; /// Reference to the event when a game is over
 
-    public AudioSource victoryTune; /// Reference to the victoryTune
-    public AudioSource playTune; /// Reference to the tune played when matching pair has been found
-    public ARGameTimer argTimer; // Reference to the timer
+    public AudioSource VictoryTune; /// Reference to the victoryTune
+    public AudioSource PlayTune; /// Reference to the tune played when matching pair has been found
+    public ARGameTimer ArgTimer; /// Reference to the timer
 
-    public float countdown = 0f;
-    public CountdownHandler countdownHandler;
+    public float Countdown = 0f;
+    public CountdownHandler CountdownHandler;
 
-    private bool _isRunning; // Status variable that hold the status if the game is running or not
+    private bool _isRunning; /// Status variable that hold the status if the game is running or not
     private bool _countDownTimerIsRunning;
     private float _cdTimeLeft;
     private int _lastIntegerTimeValue;
@@ -61,12 +61,12 @@ public class MemoryGameHandler : MonoBehaviour
             if(currentIntegerTimeValue != _lastIntegerTimeValue)
             {
                 _lastIntegerTimeValue = currentIntegerTimeValue;
-                countdownHandler.UpdatePreview(_lastIntegerTimeValue);
+                CountdownHandler.UpdatePreview(_lastIntegerTimeValue);
             }
             if(_cdTimeLeft < 0)
             {
                 _countDownTimerIsRunning = false;
-                countdownHandler.ClosePreview();
+                CountdownHandler.ClosePreview();
                 PostGameStart();
             }
         }
@@ -78,7 +78,7 @@ public class MemoryGameHandler : MonoBehaviour
     /// we increase turns by one, check if the matching index is the same for both of the selected blcoks
     /// and if they are we increase matchedPairs by one and delete the blocks. If the pair is not matching, we hide both blocks again.
     /// </summary>
-    public void setNextBlock(MemoryBlock clickedObj)
+    public void SetNextBlock(MemoryBlock clickedObj)
     { 
 
         // Do not handle any input if the game is not running
@@ -89,27 +89,27 @@ public class MemoryGameHandler : MonoBehaviour
         if (clickedObj.active)
         {
 
-            if (selected1 == null)
+            if (Selected1 == null)
             {
-                selected1 = clickedObj;
-                selected1.selected();
+                Selected1 = clickedObj;
+                Selected1.selected();
             }
-            else if (selected2 == null)
+            else if (Selected2 == null)
             {
-                turns++;
+                Turns++;
 
-                selected2 = clickedObj;
-                selected2.selected();
-                if (selected1.matchIndex == selected2.matchIndex)
+                Selected2 = clickedObj;
+                Selected2.selected();
+                if (Selected1.matchIndex == Selected2.matchIndex)
                 {
                     //print("Match pair: " + selected1.matchIndex);
-                    StartCoroutine(deleteBlocks());
-                    matchedPairs++;
+                    StartCoroutine(DeleteBlocks());
+                    MatchedPairs++;
 
                 }
                 else
                 {
-                    StartCoroutine(resetBlocks());
+                    StartCoroutine(ResetBlocks());
                 }
                 UpdateUi();
             }
@@ -121,7 +121,7 @@ public class MemoryGameHandler : MonoBehaviour
     /// </summary>
     private void UpdateUi()
     {
-        statText.text = "Turns: " + turns + "\nMatches: " + matchedPairs;
+        StatText.text = "Turns: " + Turns + "\nMatches: " + MatchedPairs;
     }
 
     /// <summary>
@@ -129,14 +129,14 @@ public class MemoryGameHandler : MonoBehaviour
     /// from the existing blocks list. After 1 second we set the variables to null so we can select two new blocks
     /// and play a tune for having found a matching pair. 
     /// </summary>
-    IEnumerator deleteBlocks()
+    IEnumerator DeleteBlocks()
     {
-        MemoryGameSetup.Instance.Blocks.Remove(selected1);
-        MemoryGameSetup.Instance.Blocks.Remove(selected2);
-        selected1.destroy();
-        selected2.destroy();
-        selected1 = null;
-        selected2 = null;
+        MemoryGameSetup.Instance.Blocks.Remove(Selected1);
+        MemoryGameSetup.Instance.Blocks.Remove(Selected2);
+        Selected1.destroy();
+        Selected2.destroy();
+        Selected1 = null;
+        Selected2 = null;
         yield return new WaitForSecondsRealtime(1f);
         if (MemoryGameSetup.Instance.Blocks.Count == 0)
         {
@@ -151,48 +151,48 @@ public class MemoryGameHandler : MonoBehaviour
     private void GameOver()
     {
         _isRunning = false;
-        if(playTune)
+        if(PlayTune)
         {
-            playTune.Stop(); // stops the replay of the music that is played during the game
-            victoryTune.Play(); // starts the replay of the tune that is played when all blocks are matched -> victory is achieved
+            PlayTune.Stop(); // stops the replay of the music that is played during the game
+            VictoryTune.Play(); // starts the replay of the tune that is played when all blocks are matched -> victory is achieved
         }
-        if(argTimer)
+        if(ArgTimer)
         {
-            argTimer.stopTimer();
+            ArgTimer.StopTimer();
         }
         
-        if (onGameOver != null)
-            onGameOver.Invoke();
+        if (OnGameOver != null)
+            OnGameOver.Invoke();
     }
 
     /// <summary>
     /// This function resets / deselects the current two selected blocks and clears the variables
     /// in order to make the selection of two new blocks possible.
     /// </summary>
-    IEnumerator resetBlocks()
+    IEnumerator ResetBlocks()
     {
-        selected1.deselect();
-        selected2.deselect();
+        Selected1.deselect();
+        Selected2.deselect();
         yield return new WaitForSecondsRealtime(1f);
-        selected1 = null;
-        selected2 = null;
+        Selected1 = null;
+        Selected2 = null;
     }
 
 
-    void resetAudio()
+    void ResetAudio()
     {
-        if (playTune == null)
+        if (PlayTune == null)
         {
             return;
         }
-            if (victoryTune.isPlaying)
+            if (VictoryTune.isPlaying)
         {
-            victoryTune.Stop();
+            VictoryTune.Stop();
         }
 
-        if (!playTune.isPlaying)
+        if (!PlayTune.isPlaying)
         {
-            playTune.Play();
+            PlayTune.Play();
         }
 
     }
@@ -202,23 +202,23 @@ public class MemoryGameHandler : MonoBehaviour
     /// This function restarts the game by calling the Restart function in the MemoryGameSetup class.
     /// It also resets values for turns and matched pairs, updates the UI accordingly and resets the audio players and files. 
     /// </summary>
-    public void restart()
+    public void Restart()
     {
-        turns = 0;
-        matchedPairs = 0;
-        selected1 = null;
-        selected2 = null;
-        if(argTimer)
+        Turns = 0;
+        MatchedPairs = 0;
+        Selected1 = null;
+        Selected2 = null;
+        if(ArgTimer)
         {
-            argTimer.stopTimer();
-            argTimer.resetTimer();
+            ArgTimer.StopTimer();
+            ArgTimer.ResetTimer();
         }
         UpdateUi();
-        resetAudio();
-        if (onGameStarts != null)
-            onGameStarts.Invoke();
+        ResetAudio();
+        if (OnGameStarts != null)
+            OnGameStarts.Invoke();
         MemoryGameSetup.Instance.ReCreateGameArea();
-        if(countdown < 1f)
+        if(Countdown < 1f)
         {
             PostGameStart();
         }else
@@ -230,27 +230,36 @@ public class MemoryGameHandler : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Postinitialization phase for the game. Here the timer will be started and game state will be set to Running 
+    /// </summary>
     private void PostGameStart()
     {
-        if (argTimer)
+        if (ArgTimer)
         {
-            argTimer.startTimer();
+            ArgTimer.StartTimer();
         }
         _isRunning = true;
     }
 
 
+    /// <summary>
+    /// Clear the game Area
+    /// </summary>
     public void CloseGame()
     {
         MemoryGameSetup.Instance.ClearGameArea();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     private void InitGameCountdown()
     {
-        _cdTimeLeft = countdown;
+        _cdTimeLeft = Countdown;
         _lastIntegerTimeValue = (int)_cdTimeLeft + 1;
         _countDownTimerIsRunning = true;
-        countdownHandler.OpenPreview(_lastIntegerTimeValue);
+        CountdownHandler.OpenPreview(_lastIntegerTimeValue);
         
     }
 }

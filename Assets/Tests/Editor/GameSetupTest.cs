@@ -18,15 +18,16 @@ public class GameSetupTest {
 
         _gameSetup = new GameObject().AddComponent<MemoryGameSetup>();
         _startPos = _gameSetup.transform;
-        _gameSetup.startingPos = _startPos;
+        _gameSetup.StartingPos = _startPos;
         _parent = _gameSetup.transform;
-        _gameSetup.parent = _parent;
-        _gameSetup.cardRows = _rows;
-        _gameSetup.cardColumns = _columns;
-        _gameSetup.offset = _offset;
+        _gameSetup.Parent = _parent;
+        _gameSetup.CardRows = _rows;
+        _gameSetup.CardColumns = _columns;
+        _gameSetup.Offset = _offset;
         GameObject block = TestUtil.GenerateBlockPrefab(_rows, _columns);
-        _gameSetup.card = block;
-        _gameSetup.CreateGameArea();
+        _gameSetup.Card = block;
+        _gameSetup.CreateGameArea(); 
+        _gameSetup.Awake();
     }
 
 
