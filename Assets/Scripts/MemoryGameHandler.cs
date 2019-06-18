@@ -66,8 +66,8 @@ public class MemoryGameHandler : MonoBehaviour
             }
             if(_cdTimeLeft < 0)
             {
-                _countDownTimerIsRunning = false;
-                CountdownHandler.ClosePreview();
+                
+                
                 PostGameStart();
             }
         }
@@ -239,12 +239,17 @@ public class MemoryGameHandler : MonoBehaviour
     /// <summary>
     /// Postinitialization phase for the game. Here the timer will be started and game state will be set to Running 
     /// </summary>
-    private void PostGameStart()
+    public void PostGameStart()
     {
         if (ArgTimer)
         {
             ArgTimer.StartTimer();
         }
+        if(CountdownHandler)
+        {
+            CountdownHandler.ClosePreview();
+        }
+        _countDownTimerIsRunning = false;
         _isRunning = true;
     }
 

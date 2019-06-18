@@ -145,6 +145,7 @@ public class MemoryGameSetup : MonoBehaviour
                 }
 
             }
+            _blocks.Clear();
         }
     }
     /// <summary>
