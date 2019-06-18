@@ -15,6 +15,9 @@ public class MemoryBlock : MonoBehaviour, IInputClickHandler
     public Renderer rd;
     public bool active;
     private Animator anim;
+    private bool move = false;
+    private float accelerationRate = 0.015f;
+    private float speed = 0;
 
     public GameObject[] objectList;
     public GameObject memoryObject;
@@ -32,6 +35,14 @@ public class MemoryBlock : MonoBehaviour, IInputClickHandler
         anim = GetComponent<Animator>();
         defaultColor = rd.material.color;
         active = true;
+    }
+
+    void Update() {
+        if (move) {
+            speed = speed + accelerationRate;
+            this.transform.Translate(new Vector3(0, 0, speed));
+
+        }
     }
 
     public void setMatchIndex(int i)
@@ -98,7 +109,10 @@ public class MemoryBlock : MonoBehaviour, IInputClickHandler
     {
         yield return new WaitForSecondsRealtime(1f);
         setColor(correctColor);
+        move = true;
         yield return new WaitForSecondsRealtime(1f);
+        speed = 0;
+        move = false;
         Destroy(gameObject);
         yield return null;
     }

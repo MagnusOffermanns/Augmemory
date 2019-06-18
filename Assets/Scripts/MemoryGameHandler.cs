@@ -98,6 +98,20 @@ public class MemoryGameHandler : MonoBehaviour
         selected2 = null;
     }
 
+    void resetAudio()
+    {
+        if (victoryTune.isPlaying)
+        {
+            victoryTune.Stop();
+        }
+
+        if (!playTune.isPlaying)
+        {
+            playTune.Play();
+        }
+
+    } 
+
     public void restart()
     {
         turns = 0;
@@ -105,15 +119,10 @@ public class MemoryGameHandler : MonoBehaviour
         selected1 = null;
         selected2 = null;
         UpdateUi();
+        resetAudio();
         MemoryGameSetup.Instance.RestartGame();
 
-        if (victoryTune.isPlaying) {
-            victoryTune.Stop();
-        }
-
-        if (!playTune.isPlaying) {
-            playTune.Play();
-        }
+        
         
     }
 }
