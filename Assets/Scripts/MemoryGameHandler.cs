@@ -28,8 +28,9 @@ public class MemoryGameHandler : MonoBehaviour
     public CountdownHandler countdownHandler;
 
     private bool _isRunning; // Status variable that hold the status if the game is running or not
-
-    
+    private bool _countDownTimerIsRunning;
+    private float _cdTimeLeft;
+    private int _lastIntegerTimeValue;
 
     
 
@@ -49,6 +50,26 @@ public class MemoryGameHandler : MonoBehaviour
     public void Awake()
     {
         _instance = this;
+    }
+
+    public void Update()
+    {
+        if(_countDownTimerIsRunning)
+        {
+            _cdTimeLeft -= Time.deltaTime;
+            int currentIntegerTimeValue = (int)_cdTimeLeft + 1;
+            if(currentIntegerTimeValue != _lastIntegerTimeValue)
+            {
+                _lastIntegerTimeValue = currentIntegerTimeValue;
+                countdownHandler.UpdatePreview(_lastIntegerTimeValue);
+            }
+            if(_cdTimeLeft < 0)
+            {
+                _countDownTimerIsRunning = false;
+                countdownHandler.ClosePreview();
+                PostGameStart();
+            }
+        }
     }
 
     /// <summary>
@@ -202,7 +223,7 @@ public class MemoryGameHandler : MonoBehaviour
             PostGameStart();
         }else
         {
-            StartCoroutine(GameCountdown());
+            InitGameCountdown();
         }
         
 
@@ -224,19 +245,12 @@ public class MemoryGameHandler : MonoBehaviour
         MemoryGameSetup.Instance.ClearGameArea();
     }
 
-    private IEnumerator GameCountdown()
+    private void InitGameCountdown()
     {
-        float cdLeft = countdown;
-        countdownHandler.OpenPreview(cdLeft);
-        do
-        {
-            float nextTimeToWait = Mathf.Clamp(cdLeft, 0, 1f);
-            yield return new WaitForSeconds(nextTimeToWait);
-            cdLeft -= 1f;
-            countdownHandler.UpdatePreview(cdLeft);
-
-        } while (cdLeft > 0);
-        countdownHandler.ClosePreview();
-        PostGameStart();
+        _cdTimeLeft = countdown;
+        _lastIntegerTimeValue = (int)_cdTimeLeft + 1;
+        _countDownTimerIsRunning = true;
+        countdownHandler.OpenPreview(_lastIntegerTimeValue);
+        
     }
 }
