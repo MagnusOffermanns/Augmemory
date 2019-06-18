@@ -15,9 +15,10 @@ public class MemoryBlock : MonoBehaviour, IInputClickHandler
     public Renderer rd;
     public bool active;
     private Animator anim;
-    private bool move = false;
-    private float accelerationRate = 0.015f;
-    private float speed = 0;
+    private bool move = false; // flag to let the MemoryBlocks start moving
+    private float accelerationRate = 0.015f;  //since we want the MemoryBlocks to move faster and faster
+                                              //this is the rate the block gets accelerated by
+    private float speed = 0; //variabe describing the current speed of the Memoryblock
 
     public GameObject[] objectList;
     public GameObject memoryObject;
@@ -37,10 +38,10 @@ public class MemoryBlock : MonoBehaviour, IInputClickHandler
         active = true;
     }
 
-    void Update() {
-        if (move) {
-            speed = speed + accelerationRate;
-            this.transform.Translate(new Vector3(0, 0, speed));
+    void Update() { //update function only used to animate that the Memoryblocks fly away when two correct matches are found
+        if (move) { // when the move flag is true the Memory block starts to accelerate
+            speed = speed + accelerationRate; //In this line the speed in this loop is calculated
+            this.transform.Translate(new Vector3(0, 0, speed)); // here the this Memoryblock is Translated into z direction (normally start position of the camera)
 
         }
     }
@@ -109,10 +110,10 @@ public class MemoryBlock : MonoBehaviour, IInputClickHandler
     {
         yield return new WaitForSecondsRealtime(1f);
         setColor(correctColor);
-        move = true;
+        move = true; //starts the movement of this Memory block
         yield return new WaitForSecondsRealtime(1f);
-        speed = 0;
-        move = false;
+        speed = 0; // set the speed back to zero and stop the movement thereby
+        move = false; // toggle the movement flag
         Destroy(gameObject);
         yield return null;
     }
