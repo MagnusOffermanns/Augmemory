@@ -32,12 +32,13 @@ public class MemoryBlock : MonoBehaviour, IInputClickHandler
     /// we get the current material color and set it as a default color and we set the active mode to true which means
     /// the object can be selected.
     /// </summary>
-    void Start()
+    public void Start()
     {
         anim = GetComponent<Animator>();
         defaultColor = rd.material.color;
         active = true;
     }
+
     /// <summary>
     /// We wait to receive the move trigger which is set when an object should be destroyed. 
     /// Once we can move we increase the speed over time each update and move the object to the back.
@@ -135,7 +136,10 @@ public class MemoryBlock : MonoBehaviour, IInputClickHandler
     IEnumerator selectRoutine()
     {
         active = false;
-        anim.SetTrigger("show");
+        if (anim)
+        {
+            anim.SetTrigger("show");
+        }
         yield return null;
     }
     /// <summary>
@@ -163,6 +167,6 @@ public class MemoryBlock : MonoBehaviour, IInputClickHandler
     /// <param name="eventData"></param>
     public void OnInputClicked(InputClickedEventData eventData)
     {
-        MemoryGameHandler.Instance.setNextBlock(this);
+        MemoryGameHandler.Instance.SetNextBlock(this);
     }
 }

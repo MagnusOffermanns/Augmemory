@@ -7,7 +7,7 @@ using UnityEngine;
 /// </summary>
 public class PostEffect : MonoBehaviour
 {
-    private static int _scenePropertyId = Shader.PropertyToID("_SceneTex");
+    private static readonly int _scenePropertyId = Shader.PropertyToID("_SceneTex");
 
     [SerializeField]
     private Shader _postOutline;

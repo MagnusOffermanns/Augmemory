@@ -4,64 +4,100 @@ using UnityEngine;
 
 public class MemoryGameSetup : MonoBehaviour
 {
-    public Transform startingPos;
-    public int cardRows;
-    public int cardColumns;
-    public GameObject card;
-    public GameObject resetButton;
-    public float offset = 100f;
-    public Transform parent;
-    public AudioSource playSource; //audio source responsible to play the music while playing the game
-
-    public List<MemoryBlock> blocksWithOutNumbers;
+    [SerializeField]
+    private Transform _startingPos; // lower Left Corner position of the playfield
+    [SerializeField]
+    private int _cardRows; // How much rows of cards are there
+    [SerializeField]
+    private int _cardColumns; // How much columns are there
+    [SerializeField]
+    private GameObject _card; // Prefab of the MemoryBlock GameObject
+    [SerializeField]
+    private float _offset = 100f; // Distance between blocks transform positions
+    [SerializeField]
+    private Transform _parent; // Parenttransform for the blocks
 
     private List<MemoryBlock> _blocks;
 
     private static MemoryGameSetup _instance;
+
+    public Transform StartingPos
+    {
+        get { return _startingPos; }
+        set { _startingPos = value; }
+    }
+
+    public int CardRows
+    {
+        get { return _cardRows; }
+        set { _cardRows = value; }
+    }
+
+    public int CardColumns
+    {
+        get { return _cardColumns; }
+        set { _cardColumns = value; }
+    }
+
+    public GameObject Card
+    {
+        get { return _card; }
+        set { _card = value; }
+    }
+
+    public float Offset
+    {
+        get { return _offset; }
+        set { _offset = value; }
+    }
+
+    public Transform Parent
+    {
+        get { return _parent; }
+        set { _parent = value; }
+    }
+
+    public static MemoryGameSetup Instance
+    {
+        get { return _instance; }
+    }
 
     public List<MemoryBlock> Blocks
     {
         get { return _blocks; }
     }
 
-    public static MemoryGameSetup Instance{
-        get { return _instance; }
-    }
+   
 
 
-    private void Awake()
+    public void Awake()
     {
         _instance = this;
     }
 
-
-    // Start is called before the first frame update
-    void Start()
+    /// <summary>
+    /// Creates the memory blocks and assigned random values to them
+    /// </summary>
+    public void CreateGameArea()
     {
-        StartGame();
-    }
-
-    public void StartGame()
-    {
-        Vector3 currPos = startingPos.position;
-
-        playSource.Play();  // starts the audio playback of the music that is heard while playing the game  
+        ClearPlayField();
         _blocks = new List<MemoryBlock>();
-        blocksWithOutNumbers = new List<MemoryBlock>();
-        for (int i = 0; i < cardColumns; i++)
+        Vector3 currPos = _startingPos.position;
+        List<MemoryBlock> blocksWithOutNumbers = new List<MemoryBlock>();
+        for (int i = 0; i < _cardColumns; i++)
         {
-            for (int j = 0; j < cardRows; j++)
+            for (int j = 0; j < _cardRows; j++)
             {
-                GameObject obj = Instantiate(card, currPos, Quaternion.identity);
-                obj.transform.parent = parent;
-                blocksWithOutNumbers.Add(obj.GetComponent<MemoryBlock>());
-                currPos.x += offset;
-                _blocks.Add(obj.GetComponent<MemoryBlock>());
+                GameObject obj = Instantiate(_card, currPos, Quaternion.identity);
+                obj.transform.parent = _parent;
+                var memBlock = obj.GetComponent<MemoryBlock>();
+                blocksWithOutNumbers.Add(memBlock);
+                currPos.x += _offset;
+                _blocks.Add(memBlock);
             }
-            currPos.x = startingPos.position.x;
-            currPos.y += offset;
+            currPos.x = _startingPos.position.x;
+            currPos.y += _offset;
         }
-
 
         //GIVE RANDOM INDEX TO BLOCK
         int currentIndex = -1;
@@ -80,18 +116,50 @@ public class MemoryGameSetup : MonoBehaviour
         }
     }
 
-    public void RestartGame()
+    /// <summary>
+    /// Internal call for clearing the playField
+    /// </summary>
+    private void ClearPlayField()
     {
-        foreach (var block in _blocks)
+        if (_blocks != null)
         {
-            
-            if(block != null)
+            foreach (var block in _blocks)
             {
-                Destroy(block.gameObject);
+
+                if (block != null)
+                {
+#if UNITY_EDITOR
+                    // Special case to remove elements in editmode because of the editmode testscript
+
+                    if (Application.isPlaying)
+                    {
+                        Destroy(block.gameObject);
+                    }
+                    else
+                    {
+                        DestroyImmediate(block.gameObject);
+                    }
+#else
+                    Destroy(block.gameObject);
+#endif
+                }
+
             }
-            
+            _blocks.Clear();
         }
-        _blocks = null;
-        StartGame();
+    }
+    /// <summary>
+    /// Recreates the playfield. Current block are getting removed
+    /// </summary>
+    public void ReCreateGameArea()
+    {
+        CreateGameArea();
+    }
+    /// <summary>
+    /// Removes all blocks on the playfield
+    /// </summary>
+    public void ClearGameArea()
+    {
+        ClearPlayField();
     }
 }

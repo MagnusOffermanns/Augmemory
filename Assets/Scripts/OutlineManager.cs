@@ -13,14 +13,16 @@ public class OutlineManager : MonoBehaviour {
 
     // current Target
     private Collider _currentTarget;
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update () {
         // create a craycast from the current middle point of the camera
-        Ray raycastHit = _camera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
+        
         RaycastHit info;
         // check if we hit something
-        if(Physics.Raycast(raycastHit, out info))
+        // from https://docs.microsoft.com/en-us/windows/mixed-reality/gaze-in-unity
+        if (Physics.Raycast(_camera.transform.position,
+               _camera.transform.forward, out info))
         {
             // check if the found target has also the HoverObject component attached
             if(info.collider.GetComponent<HoverObject>())

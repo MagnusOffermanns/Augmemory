@@ -3,36 +3,29 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class ARGameTimer : MonoBehaviour
+public class ARGameTimer : MonoBehaviour 
 {
-    public float timer; //the float variable for the timer (seconds)
-    public int minutes; //the int variable that changes according to the minutes passed
-    public TextMeshProUGUI timerText; // a reference to the text on the UI displaying the time
-    private bool timertoggler = false; // this bool is used to not execute the counting routine in the update function
+    public float Timer; //the float variable for the timer (seconds)
+    public int Minutes; //the int variable that changes according to the minutes passed
+    public TextMeshProUGUI TimerText; // a reference to the text on the UI displaying the time
+    private bool _timertoggler = false; // this bool is used to not execute the counting routine in the update function
 
 
-    // Start is called before the first frame update
-    void Start()
+     public void StartTimer() // starts the timer
     {
-        timer = 0f; //timer set to 0 at the Start of the application
-        timertoggler = true; // stops the counting in the update function
+        _timertoggler = true;
     }
 
 
-     public void startTimer() // starts the timer
-    {
-        timertoggler = true;
+    public void StopTimer() { //stops the timer to see how long one needed
+        _timertoggler = false;
     }
 
-
-    public void stopTimer() { //stops the timer to see how long one needed
-        timertoggler = false;
-    }
-
-    public void resetTimer() // resets the timer to 0:0
+    public void ResetTimer() // resets the timer to 0:0
     {
-        timer = 0.0f;
-        minutes = 0;
+        Timer = 0.0f;
+        Minutes = 0;
+        TimerText.text = Minutes + ":0" + (int)Timer;
     }
 
     // Update is called once per frame
@@ -44,24 +37,24 @@ public class ARGameTimer : MonoBehaviour
     */
     void Update()
     {
-        if (timertoggler) // is not executed if the timer is stopped i.e. timertoggler =false
+        if (_timertoggler) // is not executed if the timer is stopped i.e. timertoggler =false
         {
-            timer = timer + Time.deltaTime; //increases timer variable
+            Timer = Timer + Time.deltaTime; //increases timer variable
 
-            if ((int)timer == 60) //if 60 seconds have passed
+            if ((int)Timer == 60) //if 60 seconds have passed
             {
-                minutes++; //increase number of minutes
-                timer = 0f; //reset the seconds timer
+                Minutes++; //increase number of minutes
+                Timer = 0f; //reset the seconds timer
             }
 
 
-            if ((int)timer <= 9) // if the seconds passed are 9 or below
+            if ((int)Timer <= 9) // if the seconds passed are 9 or below
             {
-                timerText.text = minutes + ":0" + (int)timer; //add a 0 before displaying it
+                TimerText.text = Minutes + ":0" + (int)Timer; //add a 0 before displaying it
             }
             else //otherwise
             {
-                timerText.text = minutes + ":" + (int)timer; //regular time display
+                TimerText.text = Minutes + ":" + (int)Timer; //regular time display
             }
         }
     }

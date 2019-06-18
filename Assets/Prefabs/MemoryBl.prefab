@@ -459,8 +459,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   matchIndex: 0
-  wrongColor: {r: 1, g: 0, b: 0, a: 1}
-  correctColor: {r: 0, g: 1, b: 0, a: 1}
+  wrongColor: {r: 1, g: 0.76551723, b: 0, a: 1}
+  correctColor: {r: 0, g: 0.42068958, b: 1, a: 1}
   defaultColor: {r: 0, g: 0, b: 0, a: 0}
   rd: {fileID: 23245349191471248}
   active: 0
