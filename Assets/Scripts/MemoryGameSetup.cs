@@ -11,7 +11,7 @@ public class MemoryGameSetup : MonoBehaviour
     public GameObject resetButton;
     public float offset = 100f;
     public Transform parent;
-    
+    public AudioSource playSource;
 
     public List<MemoryBlock> blocksWithOutNumbers;
 
@@ -45,7 +45,7 @@ public class MemoryGameSetup : MonoBehaviour
     {
         Vector3 currPos = startingPos.position;
 
-        //GameObject resetButtonObj = Instantiate(resetButton, currPos - new Vector3(offset,0,0), Quaternion.identity);
+        playSource.Play();    
         _blocks = new List<MemoryBlock>();
         blocksWithOutNumbers = new List<MemoryBlock>();
         for (int i = 0; i < cardColumns; i++)
