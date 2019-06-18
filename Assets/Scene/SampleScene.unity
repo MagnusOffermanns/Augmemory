@@ -444,8 +444,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c854c073eae28f459a61955fc7f5e58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PostOutline: {fileID: 4800000, guid: d8b5c46dd0f67244bb4b32d6e3ec9a29, type: 3}
-  DrawSimple: {fileID: 4800000, guid: 5a920d5f9c03cfc459b2d9d96d45ab1c, type: 3}
+  _postOutline: {fileID: 0}
+  _drawSimple: {fileID: 0}
 --- !u!20 &238128672 stripped
 Camera:
   m_PrefabParentObject: {fileID: 20770519707920992, guid: d29bc40b7f3df26479d6a0aac211c355,
@@ -1775,6 +1775,22 @@ Prefab:
         type: 2}
       propertyPath: m_isInputParsingRequired
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1566760141217558, guid: 650a0a8177c50824cbdc2d62eee7218b, type: 2}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1133679693617292, guid: 650a0a8177c50824cbdc2d62eee7218b, type: 2}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1437310542732192, guid: 650a0a8177c50824cbdc2d62eee7218b, type: 2}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1133679693617292, guid: 650a0a8177c50824cbdc2d62eee7218b, type: 2}
+      propertyPath: m_Name
+      value: ResetButtonBlock
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 650a0a8177c50824cbdc2d62eee7218b, type: 2}
