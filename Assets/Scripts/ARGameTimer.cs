@@ -11,14 +11,6 @@ public class ARGameTimer : MonoBehaviour
     private bool timertoggler = false; // this bool is used to not execute the counting routine in the update function
 
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        timer = 0f; //timer set to 0 at the Start of the application
-        timertoggler = true; // stops the counting in the update function
-    }
-
-
      public void startTimer() // starts the timer
     {
         timertoggler = true;

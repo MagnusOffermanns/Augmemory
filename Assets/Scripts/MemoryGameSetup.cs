@@ -106,4 +106,9 @@ public class MemoryGameSetup : MonoBehaviour
     {
         CreateGameArea();
     }
+
+    public void ClearGameArea()
+    {
+        ClearPlayField();
+    }
 }

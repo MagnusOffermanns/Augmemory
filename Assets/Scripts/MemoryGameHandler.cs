@@ -22,6 +22,10 @@ public class MemoryGameHandler : MonoBehaviour
 
     public AudioSource victoryTune; /// Reference to the victoryTune
     public AudioSource playTune; /// Reference to the tune played when matching pair has been found
+    public ARGameTimer argTimer; // Reference to the timer
+
+    public float countdown = 0f;
+    public CountdownHandler countdownHandler;
 
     private bool _isRunning; // Status variable that hold the status if the game is running or not
 
@@ -45,12 +49,6 @@ public class MemoryGameHandler : MonoBehaviour
     public void Awake()
     {
         _instance = this;
-    }
-
-
-    public void Start()
-    {
-        restart();
     }
 
     /// <summary>
@@ -132,7 +130,17 @@ public class MemoryGameHandler : MonoBehaviour
     private void GameOver()
     {
         _isRunning = false;
-        if(onGameOver != null)
+        if(playTune)
+        {
+            playTune.Stop(); // stops the replay of the music that is played during the game
+            victoryTune.Play(); // starts the replay of the tune that is played when all blocks are matched -> victory is achieved
+        }
+        if(argTimer)
+        {
+            argTimer.stopTimer();
+        }
+        
+        if (onGameOver != null)
             onGameOver.Invoke();
     }
 
@@ -150,7 +158,23 @@ public class MemoryGameHandler : MonoBehaviour
     }
 
 
+    void resetAudio()
+    {
+        if (playTune == null)
+        {
+            return;
+        }
+            if (victoryTune.isPlaying)
+        {
+            victoryTune.Stop();
+        }
 
+        if (!playTune.isPlaying)
+        {
+            playTune.Play();
+        }
+
+    }
 
 
     /// <summary>
@@ -163,12 +187,56 @@ public class MemoryGameHandler : MonoBehaviour
         matchedPairs = 0;
         selected1 = null;
         selected2 = null;
+        if(argTimer)
+        {
+            argTimer.stopTimer();
+            argTimer.resetTimer();
+        }
         UpdateUi();
-        if(onGameStarts != null)
+        resetAudio();
+        if (onGameStarts != null)
             onGameStarts.Invoke();
         MemoryGameSetup.Instance.ReCreateGameArea();
+        if(countdown < 1f)
+        {
+            PostGameStart();
+        }else
+        {
+            StartCoroutine(GameCountdown());
+        }
+        
+
+
+    }
+
+    private void PostGameStart()
+    {
+        if (argTimer)
+        {
+            argTimer.startTimer();
+        }
         _isRunning = true;
+    }
 
 
+    public void CloseGame()
+    {
+        MemoryGameSetup.Instance.ClearGameArea();
+    }
+
+    private IEnumerator GameCountdown()
+    {
+        float cdLeft = countdown;
+        countdownHandler.OpenPreview(cdLeft);
+        do
+        {
+            float nextTimeToWait = Mathf.Clamp(cdLeft, 0, 1f);
+            yield return new WaitForSeconds(nextTimeToWait);
+            cdLeft -= 1f;
+            countdownHandler.UpdatePreview(cdLeft);
+
+        } while (cdLeft > 0);
+        countdownHandler.ClosePreview();
+        PostGameStart();
     }
 }
