@@ -98,8 +98,11 @@ public class MemoryGameHandler : MonoBehaviour
         if (MemoryGameSetup.Instance.Blocks.Count == 0)
         {
             onGameOver.Invoke();
-            playTune.Stop();
-            victoryTune.Play();
+            playTune.Stop(); // stops the replay of the music that is played during the game
+            victoryTune.Play(); // starts the replay of the tune that is played when all blocks are matched -> victory is achieved
+            GameObject.Find("Timer").GetComponent<ARGameTimer>().stopTimer();
+
+
         }
 
     }
@@ -131,6 +134,11 @@ public class MemoryGameHandler : MonoBehaviour
 
     }
 
+    void resetTimer() {
+         GameObject.Find("Timer").GetComponent<ARGameTimer>().resetTimer();
+        GameObject.Find("Timer").GetComponent<ARGameTimer>().startTimer();
+    }
+
     /// <summary>
     /// This function restarts the game by calling the Restart function in the MemoryGameSetup class.
     /// It also resets values for turns and matched pairs, updates the UI accordingly and resets the audio players and files. 
@@ -142,7 +150,8 @@ public class MemoryGameHandler : MonoBehaviour
         selected1 = null;
         selected2 = null;
         UpdateUi();
-        resetAudio();
+        resetAudio();  //resets the audioSources
+        resetTimer();  //resets the timer
         MemoryGameSetup.Instance.RestartGame();
 
 
