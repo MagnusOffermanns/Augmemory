@@ -16,6 +16,9 @@ public class MemoryGameHandler : MonoBehaviour
     public TextMeshProUGUI statText;
     public UnityEvent onGameOver;
 
+    public AudioSource victoryTune;
+    public AudioSource playTune;
+
     private static MemoryGameHandler _instance;
 
 
@@ -80,6 +83,8 @@ public class MemoryGameHandler : MonoBehaviour
         if(MemoryGameSetup.Instance.Blocks.Count == 0)
         {
             onGameOver.Invoke();
+            playTune.Stop();
+            victoryTune.Play();
         }
 
     }
@@ -101,5 +106,14 @@ public class MemoryGameHandler : MonoBehaviour
         selected2 = null;
         UpdateUi();
         MemoryGameSetup.Instance.RestartGame();
+
+        if (victoryTune.isPlaying) {
+            victoryTune.Stop();
+        }
+
+        if (!playTune.isPlaying) {
+            playTune.Play();
+        }
+        
     }
 }
