@@ -7,19 +7,27 @@ using TMPro;
 
 public class MemoryGameHandler : MonoBehaviour
 {
+    private static MemoryGameHandler _instance; //Singleton pattern variable for the MemoryGameHandler
+
+
     public MemoryBlock selected1; /// First selected MemoryBlock
     public MemoryBlock selected2; /// Second selected MemoryBlock
 
     public int turns; /// Amount of turns absolved by the player
     public int matchedPairs; /// Amount of matched pairs found by the player
 
-    public TextMeshProUGUI statText; /// Reference to the statText UI element used to display statistics 
+    public TextMeshProUGUI statText; /// Reference to the statText UI element used to display statistics
+    public UnityEvent onGameStarts;
     public UnityEvent onGameOver; /// Reference to the event when a game is over
 
     public AudioSource victoryTune; /// Reference to the victoryTune
     public AudioSource playTune; /// Reference to the tune played when matching pair has been found
 
-    private static MemoryGameHandler _instance; //Singleton pattern variable for the MemoryGameHandler
+    private bool _isRunning; // Status variable that hold the status if the game is running or not
+
+    
+
+    
 
     /// <summary>
     /// This function is used to set up the singleton pattern for the MemoryGameHandler
@@ -29,9 +37,20 @@ public class MemoryGameHandler : MonoBehaviour
         get { return _instance; }
     }
 
-    void Awake()
+    public bool IsRunning
+    {
+        get { return _isRunning; }
+    }
+
+    public void Awake()
     {
         _instance = this;
+    }
+
+
+    public void Start()
+    {
+        restart();
     }
 
     /// <summary>
@@ -41,8 +60,13 @@ public class MemoryGameHandler : MonoBehaviour
     /// and if they are we increase matchedPairs by one and delete the blocks. If the pair is not matching, we hide both blocks again.
     /// </summary>
     public void setNextBlock(MemoryBlock clickedObj)
-    {
+    { 
 
+        // Do not handle any input if the game is not running
+        if(!_isRunning)
+        {
+            return;
+        }
         if (clickedObj.active)
         {
 
@@ -92,19 +116,24 @@ public class MemoryGameHandler : MonoBehaviour
         MemoryGameSetup.Instance.Blocks.Remove(selected2);
         selected1.destroy();
         selected2.destroy();
-        yield return new WaitForSecondsRealtime(1f);
         selected1 = null;
         selected2 = null;
+        yield return new WaitForSecondsRealtime(1f);
         if (MemoryGameSetup.Instance.Blocks.Count == 0)
         {
-            onGameOver.Invoke();
-            playTune.Stop(); // stops the replay of the music that is played during the game
-            victoryTune.Play(); // starts the replay of the tune that is played when all blocks are matched -> victory is achieved
-            GameObject.Find("Timer").GetComponent<ARGameTimer>().stopTimer();
-
-
+            GameOver();
         }
 
+    }
+
+    /// <summary>
+    /// Invokes the onGameOver event
+    /// </summary>
+    private void GameOver()
+    {
+        _isRunning = false;
+        if(onGameOver != null)
+            onGameOver.Invoke();
     }
 
     /// <summary>
@@ -120,24 +149,9 @@ public class MemoryGameHandler : MonoBehaviour
         selected2 = null;
     }
 
-    void resetAudio()
-    {
-        if (victoryTune.isPlaying)
-        {
-            victoryTune.Stop();
-        }
 
-        if (!playTune.isPlaying)
-        {
-            playTune.Play();
-        }
 
-    }
 
-    void resetTimer() {
-         GameObject.Find("Timer").GetComponent<ARGameTimer>().resetTimer();
-        GameObject.Find("Timer").GetComponent<ARGameTimer>().startTimer();
-    }
 
     /// <summary>
     /// This function restarts the game by calling the Restart function in the MemoryGameSetup class.
@@ -150,10 +164,10 @@ public class MemoryGameHandler : MonoBehaviour
         selected1 = null;
         selected2 = null;
         UpdateUi();
-        resetAudio();  //resets the audioSources
-        resetTimer();  //resets the timer
-        MemoryGameSetup.Instance.RestartGame();
-
+        if(onGameStarts != null)
+            onGameStarts.Invoke();
+        MemoryGameSetup.Instance.ReCreateGameArea();
+        _isRunning = true;
 
 
     }

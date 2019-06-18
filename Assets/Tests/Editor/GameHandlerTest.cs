@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine.TestTools;
 using NUnit.Framework;
-using System.Collections;
+using System.Collections.Generic;
 
 public class GameHandlerTest {
 
@@ -13,12 +13,20 @@ public class GameHandlerTest {
     private Transform _parent;
 
     private MemoryGameSetup _gameSetup;
+    private MemoryGameHandler _gameHandler;
 
 
     [SetUp]
     public void Init()
     {
 
+        InitGameSetup();
+        InitGameHandler();
+    }
+
+
+    private void InitGameSetup()
+    {
         _gameSetup = new GameObject().AddComponent<MemoryGameSetup>();
         _startPos = _gameSetup.transform;
         _gameSetup.startingPos = _startPos;
@@ -27,47 +35,102 @@ public class GameHandlerTest {
         _gameSetup.cardRows = _rows;
         _gameSetup.cardColumns = _columns;
         _gameSetup.offset = _offset;
-        GameObject block = GenerateBlockPrefab();
+        GameObject block = TestUtil.GenerateBlockPrefab(_rows, _columns);
         _gameSetup.card = block;
-        _gameSetup.StartGame();
+        _gameSetup.CreateGameArea();
+        _gameSetup.Awake();
     }
 
-    private GameObject GenerateBlockPrefab()
+    private void InitGameHandler()
     {
-        int items = (_rows * _columns) / 2;
-        GameObject[] blockList = new GameObject[items];
-        string[] blockNames = new string[items];
-        Vector3[] customRotations = new Vector3[items];
-        for (int i = 0; i < items; i++)
-        {
-            blockList[i] = new GameObject();
-            blockNames[i] = "x";
-        }
+        _gameHandler = new GameObject().AddComponent<MemoryGameHandler>();
+        _gameHandler.Awake();
+        _gameHandler.statText = new GameObject().AddComponent<TMPro.TextMeshProUGUI>();
 
-
-        GameObject block = new GameObject();
-        var mBlock = block.AddComponent<MemoryBlock>();
-        mBlock.objectList = blockList;
-        mBlock.memoryObject = mBlock.gameObject;
-        mBlock.customRotation = customRotations;
-        mBlock.nameList = blockNames;
-        mBlock.nameTag = new GameObject().AddComponent<TMPro.TextMeshProUGUI>();
-
-
-        return block;
     }
 
     [Test]
-	public void GameHandlerTestSimplePasses() {
-		// Use the Assert class to test conditions.
+	public void GameHandlerTestIsNotRunning() {
+        Assert.IsFalse(_gameHandler.IsRunning);
 	}
 
-	// A UnityTest behaves like a coroutine in PlayMode
-	// and allows you to yield null to skip a frame in EditMode
-	[UnityTest]
-	public IEnumerator GameHandlerTestWithEnumeratorPasses() {
-		// Use the Assert class to test conditions.
-		// yield to skip a frame
-		yield return null;
-	}
+
+    [Test]
+    public void GameHandlerTestIsRunning()
+    {
+        _gameHandler.restart();
+        Assert.IsTrue(_gameHandler.IsRunning);
+    }
+
+    [Test]
+    public void GameHandlerTestBlockSelected()
+    {
+        _gameHandler.restart();
+        var block = _gameSetup.Blocks[0];
+        _gameHandler.setNextBlock(block);
+        Assert.AreEqual(block, _gameHandler.selected1);
+    }
+
+    [Test]
+    public void GameHandlerTestTwoBlocksSelected()
+    {
+        _gameHandler.restart();
+        var block1 = _gameSetup.Blocks[0];
+        var block2 = _gameSetup.Blocks[1];
+        _gameHandler.setNextBlock(block1);
+        _gameHandler.setNextBlock(block2);
+        Assert.AreEqual(block1, _gameHandler.selected1);
+        Assert.AreEqual(block2, _gameHandler.selected2);
+    }
+
+    [Test]
+    public void GameHandlerTestSelectTheSameBlockTwice()
+    {
+        _gameHandler.restart();
+        var block1 = _gameSetup.Blocks[0];
+        _gameHandler.setNextBlock(block1);
+        _gameHandler.setNextBlock(block1);
+        Assert.AreEqual(block1, _gameHandler.selected1);
+        Assert.IsNull(_gameHandler.selected2);
+    }
+
+    [Test]
+    public void GameHandlerTestSelectNotRunning()
+    {
+        var block1 = _gameSetup.Blocks[0];
+        _gameHandler.setNextBlock(block1);
+        Assert.IsNull(_gameHandler.selected1);
+    }
+
+    [Test]
+    public void GameHandlerFinishGame()
+    {
+        _gameHandler.restart();
+        int pairsCount = (_rows * _columns) / 2;
+        List<MemoryBlock>[] pairs = new List<MemoryBlock>[pairsCount];
+        var blocks = _gameSetup.Blocks;
+        for (int j = 0; j < pairsCount; j++)
+        {
+            pairs[j] = new List<MemoryBlock>();
+        }
+
+        foreach (var block in blocks)
+        {
+            int currentBlockAmount = pairs[block.matchIndex].Count;
+            if(currentBlockAmount >= 2)
+            {
+                throw new System.Exception("A pair consists only of 2 blocks");
+            }
+            pairs[block.matchIndex].Add(block);
+        }
+        for (int i = 0; i < pairsCount; i++)
+        {
+            for (int j = 0; j < 2; j++)
+            {
+                _gameHandler.setNextBlock(pairs[i][j]);
+            }
+        }
+        Assert.AreEqual(pairsCount, _gameHandler.matchedPairs);
+        Assert.AreEqual(0, _gameSetup.Blocks.Count);
+    }
 }

@@ -8,12 +8,8 @@ public class MemoryGameSetup : MonoBehaviour
     public int cardRows;
     public int cardColumns;
     public GameObject card;
-    public GameObject resetButton;
     public float offset = 100f;
     public Transform parent;
-    public AudioSource playSource; //audio source responsible to play the music while playing the game
-
-    public List<MemoryBlock> blocksWithOutNumbers;
 
     private List<MemoryBlock> _blocks;
 
@@ -24,7 +20,8 @@ public class MemoryGameSetup : MonoBehaviour
         get { return _blocks; }
     }
 
-    public static MemoryGameSetup Instance{
+    public static MemoryGameSetup Instance
+    {
         get { return _instance; }
     }
 
@@ -34,34 +31,32 @@ public class MemoryGameSetup : MonoBehaviour
         _instance = this;
     }
 
-
-    // Start is called before the first frame update
-    void Start()
+    public void CreateGameArea()
     {
-        StartGame();
-    }
-
-    public void StartGame()
-    {
-        Vector3 currPos = startingPos.position;
-
-        playSource.Play();  // starts the audio playback of the music that is heard while playing the game  
+        ClearPlayField();
         _blocks = new List<MemoryBlock>();
-        blocksWithOutNumbers = new List<MemoryBlock>();
+        Vector3 currPos = startingPos.position;
+        List<MemoryBlock> blocksWithOutNumbers = new List<MemoryBlock>();
         for (int i = 0; i < cardColumns; i++)
         {
             for (int j = 0; j < cardRows; j++)
             {
                 GameObject obj = Instantiate(card, currPos, Quaternion.identity);
                 obj.transform.parent = parent;
-                blocksWithOutNumbers.Add(obj.GetComponent<MemoryBlock>());
+                var memBlock = obj.GetComponent<MemoryBlock>();
+                blocksWithOutNumbers.Add(memBlock);
                 currPos.x += offset;
-                _blocks.Add(obj.GetComponent<MemoryBlock>());
+                _blocks.Add(memBlock);
+#if UNITY_EDITOR
+                /*if(!Application.isPlaying)
+                {
+                    memBlock.Start();
+                }*/
+#endif
             }
             currPos.x = startingPos.position.x;
             currPos.y += offset;
         }
-
 
         //GIVE RANDOM INDEX TO BLOCK
         int currentIndex = -1;
@@ -80,18 +75,35 @@ public class MemoryGameSetup : MonoBehaviour
         }
     }
 
-    public void RestartGame()
+    private void ClearPlayField()
     {
-        foreach (var block in _blocks)
+        if (_blocks != null)
         {
-            
-            if(block != null)
+            foreach (var block in _blocks)
             {
-                Destroy(block.gameObject);
+
+                if (block != null)
+                {
+#if UNITY_EDITOR
+                    if (Application.isPlaying)
+                    {
+                        Destroy(block.gameObject);
+                    }
+                    else
+                    {
+                        DestroyImmediate(block.gameObject);
+                    }
+#else
+                    Destroy(block.gameObject);
+#endif
+                }
+
             }
-            
         }
-        _blocks = null;
-        StartGame();
+    }
+
+    public void ReCreateGameArea()
+    {
+        CreateGameArea();
     }
 }

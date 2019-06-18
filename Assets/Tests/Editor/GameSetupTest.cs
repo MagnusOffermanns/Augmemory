@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
-using UnityEditor;
-using UnityEngine.TestTools;
 using NUnit.Framework;
-using System.Collections;
+using System.Collections.Generic;
 
 public class GameSetupTest {
 
@@ -26,35 +24,12 @@ public class GameSetupTest {
         _gameSetup.cardRows = _rows;
         _gameSetup.cardColumns = _columns;
         _gameSetup.offset = _offset;
-        GameObject block = GenerateBlockPrefab();
+        GameObject block = TestUtil.GenerateBlockPrefab(_rows, _columns);
         _gameSetup.card = block;
-        _gameSetup.StartGame();
+        _gameSetup.CreateGameArea();
     }
 
-    private GameObject GenerateBlockPrefab()
-    {
-        int items = (_rows * _columns) / 2;
-        GameObject[] blockList = new GameObject[items];
-        string[] blockNames = new string[items];
-        Vector3[] customRotations = new Vector3[items];
-        for (int i = 0; i < items; i++)
-        {
-            blockList[i] = new GameObject();
-            blockNames[i] = "x";
-        }
 
-
-        GameObject block = new GameObject();
-        var mBlock = block.AddComponent<MemoryBlock>();
-        mBlock.objectList = blockList;
-        mBlock.memoryObject = mBlock.gameObject;
-        mBlock.customRotation = customRotations;
-        mBlock.nameList = blockNames;
-        mBlock.nameTag = new GameObject().AddComponent<TMPro.TextMeshProUGUI>();
-
-
-        return block;
-    }
 
 	[Test]
 	public void GameSetupCheckBlockCount() {
@@ -85,6 +60,49 @@ public class GameSetupTest {
 
                 Assert.AreEqual(_parent, _gameSetup.Blocks[_rows * y + x].transform.parent);
             }
+        }
+    }
+
+    [Test]
+    public void GameSetupCheckReCreateBlocksAreDeleted()
+    {
+        List<MemoryBlock> blocks = _gameSetup.Blocks;
+        _gameSetup.ReCreateGameArea();
+        foreach (var block in blocks)
+        {
+            Assert.IsTrue(block == null);
+        }
+    }
+
+    [Test]
+    public void GameSetupCheckReCreateNewBlocksAreGenerated()
+    {
+        _gameSetup.ReCreateGameArea();
+        List<MemoryBlock> blocks = _gameSetup.Blocks;
+        
+        foreach (var block in blocks)
+        {
+            Assert.IsTrue(block != null);
+        }
+    }
+
+    [Test]
+    public void GameSetupMatchingIndex()
+    {
+        List<MemoryBlock> blocks = _gameSetup.Blocks;
+        // We have overall rows * columns items
+        // there are always pairs of 2
+        // so our maximum amount of pairs = (_rows * _columns) / 2
+        int[] matchingIndexesCount = new int[(_rows * _columns) / 2];
+        // Loop over all blocks and get amount of different indexes
+        foreach (var block in blocks)
+        {
+            matchingIndexesCount[block.matchIndex]++;
+        }
+ 
+        foreach (var count in matchingIndexesCount)
+        {
+            Assert.AreEqual(2, count);
         }
     }
 }
