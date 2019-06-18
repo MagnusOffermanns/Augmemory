@@ -85,6 +85,9 @@ public class MemoryGameHandler : MonoBehaviour
             onGameOver.Invoke();
             playTune.Stop(); // stops the replay of the music that is played during the game
             victoryTune.Play(); // starts the replay of the tune that is played when all blocks are matched -> victory is achieved
+            GameObject.Find("Timer").GetComponent<ARGameTimer>().stopTimer();
+
+
         }
 
     }
@@ -110,7 +113,12 @@ public class MemoryGameHandler : MonoBehaviour
             playTune.Play();
         }
 
-    } 
+    }
+
+    void resetTimer() {
+         GameObject.Find("Timer").GetComponent<ARGameTimer>().resetTimer();
+        GameObject.Find("Timer").GetComponent<ARGameTimer>().startTimer();
+    }
 
     public void restart()
     {
@@ -120,6 +128,7 @@ public class MemoryGameHandler : MonoBehaviour
         selected2 = null;
         UpdateUi();
         resetAudio();  //resets the audioSources
+        resetTimer();  //resets the timer
         MemoryGameSetup.Instance.RestartGame();
 
         
