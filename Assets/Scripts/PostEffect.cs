@@ -1,16 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/// <summary>
+/// This Component applies an outline effect to objects that are on the "Selection" layer. 
+/// It creates a custom camera for rendering the current camera viewport with the DrawSimple Shader
+/// </summary>
 public class PostEffect : MonoBehaviour
 {
     private static int _scenePropertyId = Shader.PropertyToID("_SceneTex");
-    
-    Camera AttachedCamera;
-    public Shader Post_Outline;
-    public Shader DrawSimple;
-    Camera TempCam;
-    Material Post_Mat;
+
+    [SerializeField]
+    private Shader PostOutline;
+    [SerializeField]
+    private Shader DrawSimple;
+
+    private Camera AttachedCamera;
+    private Camera TempCam;
+    private Material Post_Mat;
     // public RenderTexture TempRT;
     private int _cullingMask;
 
@@ -19,7 +25,7 @@ public class PostEffect : MonoBehaviour
         AttachedCamera = GetComponent<Camera>();
         TempCam = new GameObject().AddComponent<Camera>();
         TempCam.enabled = false;
-        Post_Mat = new Material(Post_Outline);
+        Post_Mat = new Material(PostOutline);
         _cullingMask = 1 << LayerMask.NameToLayer("Selection");
     }
  
