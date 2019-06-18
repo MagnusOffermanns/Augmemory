@@ -29,7 +29,7 @@ public class MemoryGameSetup : MonoBehaviour
     }
 
 
-    private void Awake()
+    public void Awake()
     {
         _instance = this;
     }
