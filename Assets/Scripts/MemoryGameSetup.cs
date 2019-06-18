@@ -11,7 +11,7 @@ public class MemoryGameSetup : MonoBehaviour
     public GameObject resetButton;
     public float offset = 100f;
     public Transform parent;
-    public AudioSource playSource;
+    public AudioSource playSource; //audio source responsible to play the music while playing the game
 
     public List<MemoryBlock> blocksWithOutNumbers;
 
@@ -45,7 +45,7 @@ public class MemoryGameSetup : MonoBehaviour
     {
         Vector3 currPos = startingPos.position;
 
-        playSource.Play();    
+        playSource.Play();  // starts the audio playback of the music that is heard while playing the game  
         _blocks = new List<MemoryBlock>();
         blocksWithOutNumbers = new List<MemoryBlock>();
         for (int i = 0; i < cardColumns; i++)

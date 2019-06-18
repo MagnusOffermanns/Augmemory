@@ -16,8 +16,8 @@ public class MemoryGameHandler : MonoBehaviour
     public TextMeshProUGUI statText;
     public UnityEvent onGameOver;
 
-    public AudioSource victoryTune;
-    public AudioSource playTune;
+    public AudioSource playTune; //Is a audiosource which plays the music during the current game
+    public AudioSource victoryTune; //Is a audiosource which plays the music when all blocks are matched i.e. victory is achieved
 
     private static MemoryGameHandler _instance;
 
@@ -83,8 +83,8 @@ public class MemoryGameHandler : MonoBehaviour
         if(MemoryGameSetup.Instance.Blocks.Count == 0)
         {
             onGameOver.Invoke();
-            playTune.Stop();
-            victoryTune.Play();
+            playTune.Stop(); // stops the replay of the music that is played during the game
+            victoryTune.Play(); // starts the replay of the tune that is played when all blocks are matched -> victory is achieved
         }
 
     }
@@ -98,14 +98,14 @@ public class MemoryGameHandler : MonoBehaviour
         selected2 = null;
     }
 
-    void resetAudio()
+    void resetAudio() // is used to reset the Audiosources
     {
-        if (victoryTune.isPlaying)
+        if (victoryTune.isPlaying) // stops the victory tune if it is playing
         {
             victoryTune.Stop();
         }
 
-        if (!playTune.isPlaying)
+        if (!playTune.isPlaying) // starts the audio during normal play if it is not already playing
         {
             playTune.Play();
         }
@@ -119,7 +119,7 @@ public class MemoryGameHandler : MonoBehaviour
         selected1 = null;
         selected2 = null;
         UpdateUi();
-        resetAudio();
+        resetAudio();  //resets the audioSources
         MemoryGameSetup.Instance.RestartGame();
 
         
