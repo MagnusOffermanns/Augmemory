@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using HoloToolkit.Unity.InputModule;
 
-public class HoverObject : MonoBehaviour, ISourceStateHandler
+public class HoverObject : MonoBehaviour
 {
     private int _layerMask;
 
@@ -15,20 +15,15 @@ public class HoverObject : MonoBehaviour, ISourceStateHandler
         _selectionLayerMask = LayerMask.NameToLayer("Selection");
     }
 
-
-    public void OnSourceDetected(SourceStateEventData eventData)
+    public void Select()
     {
-        Debug.Log("Got source");
         SetLayerMaskRecursive(gameObject, _selectionLayerMask);
     }
 
-    public void OnSourceLost(SourceStateEventData eventData)
+    public void ResetSelection()
     {
-        Debug.Log("Lost source");
         SetLayerMaskRecursive(gameObject, _layerMask);
-
     }
-
 
     private void SetLayerMaskRecursive(GameObject target, int layerMask)
     {
