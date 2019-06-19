@@ -1,6 +1,8 @@
 # Augmemory  
 __A AR memory game__
 
+![scene](https://user-images.githubusercontent.com/28506721/59743024-5402b700-926f-11e9-833f-c6da639dd1e3.png)
+
 Our application is a ready-to-play memory game for all ages but our main target audience is children between 6-12-year-olds. Like its physical counterpart, our memory game increases short term memory, enhances the visual distinction of objects, improves creativity and is a good brain exercise. We also offer the possibility to add text to the memory cards in order to make this game viable for educational purposes, e.g. learning a new language through connecting a word with an object/picture.  
 
 # Build instructions
